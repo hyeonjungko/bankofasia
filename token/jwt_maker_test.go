@@ -28,9 +28,9 @@ func TestJWTMaker(t *testing.T) {
 	require.NotEmpty(t, payload)
 
 	require.Equal(t, username, payload.Username)
-	require.NotEmpty(t, payload.RegisteredClaims.ID)
-	require.WithinDuration(t, issuedAt, payload.RegisteredClaims.IssuedAt.Time, time.Second)
-	require.WithinDuration(t, expiredAt, payload.RegisteredClaims.ExpiresAt.Time, time.Second)
+	require.NotEmpty(t, payload.ID)
+	require.WithinDuration(t, issuedAt, payload.IssuedAt, time.Second)
+	require.WithinDuration(t, expiredAt, payload.ExpiredAt, time.Second)
 }
 
 func TestExpiredJWTToken(t *testing.T) {
@@ -48,10 +48,21 @@ func TestExpiredJWTToken(t *testing.T) {
 }
 
 func TestInvalidTokenAlgNone(t *testing.T) {
-	payload, err := NewPayload(util.RandomOwner(), time.Minute)
+	username := util.RandomOwner()
+	duration := time.Minute
+	payload, err := NewPayload(username, duration)
 	require.NoError(t, err)
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodNone, payload)
+	jwtPayload := &JWTPayload{
+		Username: username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ID:        payload.ID.String(),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+		},
+	}
+
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodNone, jwtPayload)
 	token, err := jwtToken.SignedString(jwt.UnsafeAllowNoneSignatureType)
 	require.NoError(t, err)
 

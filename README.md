@@ -17,6 +17,7 @@ one bank, all assets.
 * [`testify`](https://github.com/stretchr/testify) to ease test writing
 * [`migrate`](https://github.com/golang-migrate/migrate) to migrate DB versions up/down
 * [`viper`](https://github.com/spf13/viper) to read/set env & configuration variables
+* [`o1egl/paseto`](https://github.com/o1egl/paseto) to add PASETO token authentication
 
 ## TODO Backlog
 * Add tests for all errors of `/transfers` to gain full coverage

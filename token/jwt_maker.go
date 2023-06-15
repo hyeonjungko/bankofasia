@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 const minSecretKeySize = 32
@@ -27,7 +28,16 @@ func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (str
 		return "", err
 	}
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	jwtPayload := &JWTPayload{
+		Username: username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ID:        payload.ID.String(),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+		},
+	}
+
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwtPayload)
 	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 
@@ -40,14 +50,26 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 		return []byte(maker.secretKey), nil
 	}
 
-	jwtToken, err := jwt.ParseWithClaims(token, &Payload{}, keyFunc)
+	jwtToken, err := jwt.ParseWithClaims(token, &JWTPayload{}, keyFunc)
 	if err != nil {
 		return nil, fmt.Errorf("token validation error: %w", err)
 	}
 
-	payload, ok := jwtToken.Claims.(*Payload)
+	jwtPayload, ok := jwtToken.Claims.(*JWTPayload)
 	if !ok {
 		return nil, ErrInvalidToken
+	}
+
+	id, err := uuid.Parse(jwtPayload.RegisteredClaims.ID)
+	if err != nil {
+		return nil, fmt.Errorf("UUID parsing error: %w", err)
+	}
+
+	payload := &Payload{
+		ID:        id,
+		Username:  jwtPayload.Username,
+		IssuedAt:  jwtPayload.RegisteredClaims.IssuedAt.Time,
+		ExpiredAt: jwtPayload.RegisteredClaims.ExpiresAt.Time,
 	}
 
 	return payload, nil
