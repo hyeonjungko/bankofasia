@@ -10,6 +10,7 @@ one bank, all assets.
 * added Git workflow for tests for `main` branch
 * added server routes (+ tests) for `account` related functionality
 * added server routes for `transfer` related functionality
+* added jwt token auth functionality (should move to paseto)
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code
