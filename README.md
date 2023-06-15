@@ -18,4 +18,5 @@ one bank, all assets.
 * [`viper`](https://github.com/spf13/viper) to read/set env & configuration variables
 
 ## TODO Backlog
-* Add tests for all errors of `/transfers` to gain full coverage 
+* Add tests for all errors of `/transfers` to gain full coverage
+* Add tests for all errors of `/users` to gain full coverage
