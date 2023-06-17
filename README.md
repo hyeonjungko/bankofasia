@@ -3,14 +3,16 @@
 one bank, all assets.
 
 ## Progress
-* created Postgres DB schema
-* added migration support using [`golang-migrate`](https://github.com/golang-migrate/migrate#cli-usage)
-* created Makefile for docker container creation, db up/down migrations
-* added tests for DB transactions, preventing deadlocks
-* added Git workflow for tests for `main` branch
-* added server routes (+ tests) for `account` related functionality
-* added server routes for `transfer` related functionality
-* added jwt token auth functionality (should move to paseto)
+* Postgres DB schema
+* Migration support using [`golang-migrate`](https://github.com/golang-migrate/migrate#cli-usage)
+* Makefile for docker container creation, db up/down migrations
+* Tests for DB transactions, preventing deadlocks
+* Git workflow for tests for `main` branch
+* Server routes (+ tests) for `account` related functionality
+* Server routes for `transfer` related functionality
+* JWT token authentication
+* PASETO token authentication
+* `users/login` for user login using PASETO token authentication
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code

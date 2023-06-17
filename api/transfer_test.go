@@ -66,7 +66,7 @@ func TestCreateTransferAPI(t *testing.T) {
 			store := mockdb.NewMockStore(controller)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := NewTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(tc.body)
