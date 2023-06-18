@@ -6,19 +6,25 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	mockdb "github.com/hyeonjungko/bankofasia/db/mock"
 	db "github.com/hyeonjungko/bankofasia/db/sqlc"
+	"github.com/hyeonjungko/bankofasia/token"
 	"github.com/hyeonjungko/bankofasia/util"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateTransferAPI(t *testing.T) {
 	amount := int64(10)
-	account1 := randomAccount()
-	account2 := randomAccount()
+
+	user1, _ := randomUser(t)
+	user2, _ := randomUser(t)
+
+	account1 := randomAccount(user1.Username)
+	account2 := randomAccount(user2.Username)
 
 	account1.Currency = util.USD
 	account2.Currency = util.USD
@@ -26,6 +32,7 @@ func TestCreateTransferAPI(t *testing.T) {
 	testCases := []struct {
 		name          string
 		body          gin.H
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
 	}{
@@ -36,6 +43,9 @@ func TestCreateTransferAPI(t *testing.T) {
 				"to_account_id":   account2.ID,
 				"amount":          amount,
 				"currency":        util.USD,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user1.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				// add expections of GetAccount for account1 & 2
@@ -76,6 +86,7 @@ func TestCreateTransferAPI(t *testing.T) {
 			req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
+			tc.setupAuth(t, req, server.tokenMaker)
 			server.router.ServeHTTP(recorder, req)
 			tc.checkResponse(t, recorder)
 		})

@@ -13,6 +13,7 @@ one bank, all assets.
 * JWT token authentication
 * PASETO token authentication
 * `users/login` for user login using PASETO token authentication
+* add PASETO token authentication for `/accounts`, `/transfer` routes
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code
