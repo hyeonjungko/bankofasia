@@ -9,11 +9,12 @@ one bank, all assets.
 * Tests for DB transactions, preventing deadlocks
 * Git workflow for tests for `main` branch
 * Server routes (+ tests) for `account` related functionality
-* Server routes for `transfer` related functionality
+* Server routes (+ tests) for `transfer` related functionality
 * JWT token authentication
 * PASETO token authentication
 * `users/login` for user login using PASETO token authentication
-* add PASETO token authentication for `/accounts`, `/transfer` routes
+* PASETO token authentication for `/accounts`, `/transfer` routes
+* Dockerfile (multi-stage to reduce image size)
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code
