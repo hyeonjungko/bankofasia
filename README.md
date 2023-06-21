@@ -15,6 +15,7 @@ one bank, all assets.
 * `users/login` for user login using PASETO token authentication
 * PASETO token authentication for `/accounts`, `/transfer` routes
 * Dockerfile (multi-stage to reduce image size)
+* Docker Compose file to migrate and start DB before running main api
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code
