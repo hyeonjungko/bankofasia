@@ -16,6 +16,7 @@ one bank, all assets.
 * PASETO token authentication for `/accounts`, `/transfer` routes
 * Dockerfile (multi-stage to reduce image size)
 * Docker Compose file to migrate and start DB before running main api
+* CI workflow to deploy Docker image to AWS Container Registry using OpenID Connect
 
 ## External Packages
 * [`sqlc`](https://sqlc.dev/) to translate SQL into Go code
