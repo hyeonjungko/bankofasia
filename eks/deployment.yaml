@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bank-of-asia-api-deployment
+  labels:
+    app: bank-of-asia-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank-of-asia-api
+  template:
+    metadata:
+      labels:
+        app: bank-of-asia-api
+    spec:
+      containers:
+        - name: bank-of-asia-api
+          image: 499952514402.dkr.ecr.ap-northeast-2.amazonaws.com/bankofasia:45fe5ab91f60553b8526368feb3bc927e9fd4cb3
+          ports:
+            - containerPort: 8080
