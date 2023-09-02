@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=bank_of_asia
+      - POSTGRES_DB=bankofasia
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
   api:
