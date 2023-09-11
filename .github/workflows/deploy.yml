@@ -6,7 +6,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  deploy:
     name: Build image
     runs-on: ubuntu-latest
 
@@ -17,6 +17,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.28.1"
+        id: install
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2 # More information on this action can be found below in the 'AWS Credentials' section
@@ -33,9 +39,17 @@ jobs:
 
       - name: Build, tag, and push docker image to Amazon ECR
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: bankofasia
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: bankofasia
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t latest .
+          docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Deploy image to Amazon EKS
+        run: |
+          kubectl apply -f eks/aws-auth.yaml
+          kubectl apply -f eks/deployment.yaml
+          kubectl apply -f eks/service.yaml
+          kubectl apply -f eks/issuer.yaml
+          kubectl apply -f eks/ingress.yaml
