@@ -19,6 +19,7 @@ one bank, all assets.
 - Docker Compose file to migrate and start DB before running main api
 - Set Up AWS (RDS, Secrets Manager, IAM User/User Groups, etc.)
 - CI workflow to deploy Docker image to AWS Container Registry using OpenID Connect
+- Set up EKS configurations to automatically authenticate, deploy, set up ingress, issue & renew TLS certificates
 
 ## External Packages
 

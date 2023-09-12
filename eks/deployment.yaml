@@ -17,5 +17,6 @@ spec:
       containers:
         - name: bank-of-asia-api
           image: 499952514402.dkr.ecr.ap-northeast-2.amazonaws.com/bankofasia:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
