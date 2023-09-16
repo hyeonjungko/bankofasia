@@ -20,6 +20,9 @@ one bank, all assets.
 - Set Up AWS (RDS, Secrets Manager, IAM User/User Groups, etc.)
 - CI workflow to deploy Docker image to AWS Container Registry using OpenID Connect
 - Set up EKS configurations to automatically authenticate, deploy, set up ingress, issue & renew TLS certificates
+- Add support for both access tokens & refresh tokens for user login
+- Add integration tests for user login
+- Add dbdocs integration
 
 ## External Packages
 
