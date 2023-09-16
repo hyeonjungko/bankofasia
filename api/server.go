@@ -19,7 +19,7 @@ type Server struct {
 	router     *gin.Engine
 }
 
-// NewServer creates new server and sets up routing
+// NewServer creates new HTTP server and sets up routing
 func NewServer(config util.Config, store db.Store) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 	if err != nil {
