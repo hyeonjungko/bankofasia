@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"embed"
 	"log"
 	"net"
 	"net/http"
@@ -18,6 +19,13 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 )
+
+// The go embed directive statement must be outside of function body
+
+// Embed the Swaagger directory
+//
+//go:embed doc/swagger/*
+var swaggerFiles embed.FS
 
 func main() {
 	// Load configurations
@@ -88,7 +96,9 @@ func runGatewayServer(config util.Config, store db.Store) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	fs := http.FileServer(http.Dir("./doc/swagger"))
+	//fs := http.FileServer(http.Dir("./doc/swagger"))
+	swaggerFS := http.FS(swaggerFiles)
+	fs := http.FileServer(swaggerFS)
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
