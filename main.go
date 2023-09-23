@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -24,7 +25,7 @@ import (
 
 // Embed the Swaagger directory
 //
-//go:embed doc/swagger/*
+//go:embed doc/swagger
 var swaggerFiles embed.FS
 
 func main() {
@@ -96,10 +97,14 @@ func runGatewayServer(config util.Config, store db.Store) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-	//fs := http.FileServer(http.Dir("./doc/swagger"))
-	swaggerFS := http.FS(swaggerFiles)
+	subFS, err := fs.Sub(swaggerFiles, "doc/swagger")
+	if err != nil {
+		log.Fatal("cannot create FS from subtree: ", err)
+	}
+	swaggerFS := http.FS(subFS)
 	fs := http.FileServer(swaggerFS)
-	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	swaggerHandler := http.StripPrefix("/swagger/", fs)
+	mux.Handle("/swagger/", swaggerHandler)
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
