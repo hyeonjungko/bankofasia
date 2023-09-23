@@ -23,6 +23,8 @@ one bank, all assets.
 - Add support for both access tokens & refresh tokens for user login
 - Add integration tests for user login
 - Add dbdocs integration
+- gRPC server & HTTP Gateway server using protobufs
+- evans support to ease development & testing
 
 ## External Packages
 
