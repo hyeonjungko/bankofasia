@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	BankOfAsia_CreateUser_FullMethodName = "/pb.BankOfAsia/CreateUser"
+	BankOfAsia_UpdateUser_FullMethodName = "/pb.BankOfAsia/UpdateUser"
 	BankOfAsia_LoginUser_FullMethodName  = "/pb.BankOfAsia/LoginUser"
 )
 
@@ -28,6 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BankOfAsiaClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 }
 
@@ -48,6 +50,15 @@ func (c *bankOfAsiaClient) CreateUser(ctx context.Context, in *CreateUserRequest
 	return out, nil
 }
 
+func (c *bankOfAsiaClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, BankOfAsia_UpdateUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *bankOfAsiaClient) LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
 	out := new(LoginUserResponse)
 	err := c.cc.Invoke(ctx, BankOfAsia_LoginUser_FullMethodName, in, out, opts...)
@@ -62,6 +73,7 @@ func (c *bankOfAsiaClient) LoginUser(ctx context.Context, in *LoginUserRequest, 
 // for forward compatibility
 type BankOfAsiaServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	mustEmbedUnimplementedBankOfAsiaServer()
 }
@@ -72,6 +84,9 @@ type UnimplementedBankOfAsiaServer struct {
 
 func (UnimplementedBankOfAsiaServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedBankOfAsiaServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedBankOfAsiaServer) LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginUser not implemented")
@@ -107,6 +122,24 @@ func _BankOfAsia_CreateUser_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BankOfAsia_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankOfAsiaServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankOfAsia_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankOfAsiaServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BankOfAsia_LoginUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginUserRequest)
 	if err := dec(in); err != nil {
@@ -135,6 +168,10 @@ var BankOfAsia_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUser",
 			Handler:    _BankOfAsia_CreateUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _BankOfAsia_UpdateUser_Handler,
 		},
 		{
 			MethodName: "LoginUser",
